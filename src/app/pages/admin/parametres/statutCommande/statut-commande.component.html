@@ -1,0 +1,101 @@
+<p-toast></p-toast>
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="ajouter" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="right" *ngIf="statutCommandes && statutCommandes.length > 0">
+                    <button pButton type="button" icon="pi pi-file-pdf" class="p-button-warning mr-2"
+                            (click)="generatePDF()"></button>
+                    <button pButton type="button" icon="pi pi-file-excel" class="p-button-success mr-2"
+                            (click)="exporterEnExcel()"></button>
+                </ng-template>
+            </p-toolbar>
+            <p-table *ngIf="statutCommandes && statutCommandes.length > 0" #dt [value]="statutCommandes" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['libelle','prix','statutCommande','statutCommande','dateStock','montantTotal']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"  selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Gestion des statut de commandes</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Rechercher..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="libelle">Libelle <p-sortIcon field="libelle"></p-sortIcon></th>
+                        <th pSortableColumn="couleur">Couleur <p-sortIcon field="couleur"></p-sortIcon></th>
+                        <th pSortableColumn="description">Description<p-sortIcon field="description"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-statutCommande>
+                    <tr>
+                        <td style=" min-width:10rem;"><span class="p-column-title">Code</span>
+                            {{statutCommande?.libelle}}
+                        </td>
+                        <td style=" min-width:10rem;"><span class="p-column-title">Code</span>
+                            {{statutCommande?.couleur}}
+                        </td>
+                        <td style=" min-width:10rem;"><span class="p-column-title">Code</span>
+                            {{statutCommande?.description}}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple  icon="pi pi-pencil" class=" p-button p-component p-button-text p-button-icon-only p-button-success mr-2"  (click)="editStatutCommande(statutCommande)"><span class="p-button-icon pi pi-pencil" aria-hidden="true"></span></button>
+                                <button pButton pRipple  icon="pi pi-trash" class=" p-button p-component p-button-text p-button-icon-only p-button-danger"  (click)="deleteStatutCommande(statutCommande)"><span class="p-button-icon pi pi-trash" aria-hidden="true"></span></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <div *ngIf="statutCommandes?.length===0">Aucun statut  </div>
+        </div>
+
+        <p-dialog [(visible)]="statutCommandeDialog" [style]="{width: '450px'}" header="Details du statut " [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <form [formGroup]="form" (ngSubmit)="createStatutCommande()">
+                    <div class="field">
+                        <label for="libelle">Libelle</label>
+                        <input type="text" pInputText id="libelle" formControlName="libelle"/>
+                        <small *ngIf="form?.get('libelle')?.hasError('libelleExists') && form?.get('libelle')?.touched" class="p-error">
+                            Ce nom existe déjà .
+                        </small>
+                    </div>
+                    <div class="field">
+                        <label for="couleur">Couleur</label>
+                        <input type="text" pInputText id="couleur" formControlName="couleur"/>
+                    </div>
+                    <div class="field">
+                        <label for="description">Description</label>
+                        <textarea type="text" pInputText id="description" formControlName="description"> </textarea>
+                    </div>
+                </form>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text p-button-danger" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Sauvegarder" icon="pi pi-check" class="p-button-text p-button-success" (click)="createStatutCommande()" [disabled]="form.invalid" [loading]="loadingStatut"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteStatutCommandeDialog" header="Confirmer" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="statutCommande">Voulez-vous supprimer <b>{{statutCommande.libelle}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="non" (click)="deleteStatutCommandeDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="oui" (click)="confirmDelete()" [loading]="loadingStatut"></button>
+            </ng-template>
+        </p-dialog>
+
+    </div>
+</div>
+<div *ngIf="loadingStatut" class="loading-message text text-center">
+    <p>Chargement, veuillez patienter...</p>
+</div>

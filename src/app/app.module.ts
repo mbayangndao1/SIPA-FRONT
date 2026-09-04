@@ -3,14 +3,19 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import {AdminModule} from "./pages/admin/admin.module";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {AdminLayoutModule} from "./layout/admin-layout/admin.layout.module";
+import {ClientLayoutModule} from "./layout/client-layout/client.layout.module";
+import {AppLayoutModule} from "./layout/app.layout.module";
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule
+    BrowserModule,AppLayoutModule,
+    AppRoutingModule,AdminLayoutModule,BrowserAnimationsModule,ClientLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]
