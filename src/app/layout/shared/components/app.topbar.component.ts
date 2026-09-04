@@ -44,22 +44,21 @@ export class AppTopBarComponent implements OnInit{
                 {
                     label: 'Profil', icon: 'pi pi-refresh', command: () => {
                         this.router.navigate(['/profile']);
-                    }
-                /*,
+                    }},
 
-                    label: 'admin', icon: 'pi pi-unlock', command: (hello) => {
+              {label: 'admin', icon: 'pi pi-unlock', command: (hello) => {
                         this.router.navigate(['/admin']);
-                    },
+                    }},
 
-                    label: 'Client', icon: 'pi pi-unlock', command: () => {
+              {label: 'Client', icon: 'pi pi-unlock', command: () => {
                         this.router.navigate(['/client']);
-                    },
+                    }},
                 // separator: true,
 
-                    label: 'Déconnexion', icon: 'pi pi-sign-out', command: () => {
+              {label: 'Déconnexion', icon: 'pi pi-sign-out', command: () => {
                        alert("déconnecter");
                         sessionStorage.clear();
-                    }*/
+                    }
                 }
             ];
         }
